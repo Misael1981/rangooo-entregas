@@ -1,53 +1,32 @@
-"use client";
+import LandingPage from "@/components/LandingPage";
+import { authOptions } from "@/lib/auth";
+import { db } from "@/lib/prisma";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
-import { MapPin, Bell, Clock } from "lucide-react";
-import Feature from "@/components/Feature";
-import Header from "@/components/Header";
-import Hero from "@/components/Hero";
-import About from "@/components/About";
-import CtaLogin from "@/components/CtaLogin";
-import Footer from "@/components/Footer";
+export default async function RootPage() {
+  const session = await getServerSession(authOptions);
 
-export default function HomePage() {
-  return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
-      <Header />
+  if (!session?.user?.email) {
+    return <LandingPage />;
+  }
 
-      {/* Hero */}
-      <Hero />
+  const user = await db.user.findUnique({
+    where: { email: session.user.email },
+    include: { deliveryPerson: true },
+  });
 
-      {/* Features */}
-      <section className="border-t">
-        <div className="max-w-105 mx-auto px-6 py-10 space-y-6">
-          <Feature
-            icon={<Bell className="h-5 w-5" />}
-            title="Pedidos em tempo real"
-            description="Receba notificações sempre que houver uma nova entrega disponível."
-          />
+  if (!user?.deliveryPerson) {
+    redirect("/entregador/cadastro");
+  }
 
-          <Feature
-            icon={<MapPin className="h-5 w-5" />}
-            title="Navegação até o cliente"
-            description="Acesse rapidamente o endereço do cliente e abra no GPS."
-          />
+  if (user.deliveryPerson.status === "PENDING") {
+    redirect("/entregador/aguardando");
+  }
 
-          <Feature
-            icon={<Clock className="h-5 w-5" />}
-            title="Histórico de entregas"
-            description="Acompanhe todas as entregas que você já realizou."
-          />
-        </div>
-      </section>
+  if (user.deliveryPerson.status === "REJECTED") {
+    redirect("/entregador/rejeitado");
+  }
 
-      {/* About */}
-      <About />
-
-      {/* CTA */}
-      <CtaLogin />
-
-      {/* Footer */}
-      <Footer />
-    </div>
-  );
+  redirect("/entregador/dashboard");
 }

@@ -1,5 +1,6 @@
-import { VehicleType } from "@/generated/prisma/client";
 import z from "zod";
+
+export const VehicleTypeEnum = ["MOTORCYCLE", "CAR", "BIKE"] as const;
 
 export const registerSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
@@ -26,7 +27,7 @@ export const registerSchema = z.object({
     .union([z.string(), z.any()])
     .refine((val) => val, "Imagem de CNH é obrigatória"),
   vehiclePlate: z.string().min(1, "Placa do veículo é obrigatória"),
-  vehicleType: z.enum(VehicleType, {
+  vehicleType: z.enum(VehicleTypeEnum, {
     message: "Selecione uma categoria válida",
   }),
   notes: z.string().optional(),

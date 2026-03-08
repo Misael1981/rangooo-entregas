@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import Step1PersonalData from "./steps/Step1PersonalData";
 import Step2Address from "./steps/Step2Address";
 import Step3Documents from "./steps/Step3Documents";
 import Step4Confirmation from "./steps/Step4Confirmation";
+
+import { useState } from "react";
 import { FormValues, registerSchema } from "@/schemas/form-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";

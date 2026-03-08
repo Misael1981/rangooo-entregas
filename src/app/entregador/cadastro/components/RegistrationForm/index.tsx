@@ -104,7 +104,7 @@ const RegistrationForm = () => {
       });
 
       if (result?.error) {
-        toast.error(result.error, { id: toastId });
+        toast.error("Ocorreu um erro inesperado. Tente novamente.");
         setIsPending(false);
         return;
       }

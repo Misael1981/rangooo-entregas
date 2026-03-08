@@ -16,7 +16,7 @@ export async function registerDeliveryPerson(formData: FormValues) {
   const result = registerSchema.safeParse(formData);
 
   if (!result.success) {
-    const errorMessages = result.error.errors.map((e) => e.message).join(", ");
+    const errorMessages = result.error;
     return { error: errorMessages };
   }
 

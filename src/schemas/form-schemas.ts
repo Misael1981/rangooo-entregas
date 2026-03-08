@@ -1,4 +1,4 @@
-import { VehicleType } from "@/generated/prisma/enums";
+import { VehicleType } from "@/generated/prisma/client";
 import z from "zod";
 
 export const registerSchema = z.object({

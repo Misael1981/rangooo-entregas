@@ -25,6 +25,7 @@ const DialogLogin = ({ isOpen, onOpenChange }: DialogLoginProps) => {
 
     signIn("google", { callbackUrl: "/verificar-perfil" });
   };
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[95%] text-primary">
@@ -78,7 +79,7 @@ const DialogLogin = ({ isOpen, onOpenChange }: DialogLoginProps) => {
             </label>
           </div>
           {!termosAceitos && (
-            <p className="text-xs text-center text-muted-foreground italic">
+            <p className="text-xs text-center text-yellow-500 italic">
               * Você precisa aceitar os termos para prosseguir.
             </p>
           )}

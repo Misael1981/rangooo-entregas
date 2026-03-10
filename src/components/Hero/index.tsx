@@ -1,8 +1,17 @@
+"use client";
+
 import Image from "next/image";
-import Link from "next/link";
 import { Button } from "../ui/button";
+import { useState } from "react";
+import DialogLogin from "../DialogLogin";
 
 const Hero = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleOpenDialog = () => {
+    setIsDialogOpen(true);
+  };
+
   return (
     <section className="flex-1">
       <div className="max-w-105 mx-auto px-6 py-10 text-center">
@@ -22,12 +31,11 @@ const Hero = () => {
           rápida.
         </p>
 
-        <Link href="/login">
-          <Button className="w-full" size="lg">
-            Começar agora
-          </Button>
-        </Link>
+        <Button className="w-full" size="lg" onClick={handleOpenDialog}>
+          Começar agora
+        </Button>
       </div>
+      <DialogLogin isOpen={isDialogOpen} onOpenChange={setIsDialogOpen} />
     </section>
   );
 };

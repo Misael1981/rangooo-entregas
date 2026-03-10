@@ -13,7 +13,11 @@ export default async function RootPage() {
 
   const user = await db.user.findUnique({
     where: { email: session.user.email },
-    include: { deliveryPerson: true },
+    select: {
+      deliveryPerson: {
+        select: { status: true },
+      },
+    },
   });
 
   if (!user?.deliveryPerson) {

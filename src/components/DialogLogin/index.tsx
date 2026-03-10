@@ -23,7 +23,7 @@ const DialogLogin = ({ isOpen, onOpenChange }: DialogLoginProps) => {
   const handleGoogleLogin = () => {
     if (!termosAceitos) return;
 
-    signIn("google", { callbackUrl: "/verificar-perfil" });
+    signIn("google", { callbackUrl: "/" });
   };
 
   return (

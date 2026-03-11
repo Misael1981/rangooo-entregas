@@ -24,8 +24,10 @@ export const registerSchema = z.object({
         }),
     ),
   documentImageUrl: z
-    .union([z.string(), z.any()])
-    .refine((val) => val, "Imagem de CNH é obrigatória"),
+    .union([z.string().min(1), z.instanceof(File)])
+    .refine((val) => val !== null && val !== undefined, {
+      message: "Imagem de CNH é obrigatória",
+    }),
   vehiclePlate: z.string().min(1, "Placa do veículo é obrigatória"),
   vehicleType: z.enum(VehicleTypeEnum, {
     message: "Selecione uma categoria válida",

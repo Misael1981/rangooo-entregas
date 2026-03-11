@@ -80,9 +80,9 @@ const RegistrationForm = () => {
 
   const onSubmit = async (data: FormValues) => {
     setIsPending(true);
+    const toastId = toast.loading("Enviando seu cadastro...");
 
     try {
-      const toastId = toast.loading("Enviando seu cadastro...");
       let imageUrl = data.documentImageUrl;
 
       if (data.documentImageUrl instanceof File) {
@@ -92,9 +92,9 @@ const RegistrationForm = () => {
           );
           imageUrl = uploadResult.url;
         } catch (err) {
-          toast.error("Falha ao subir a imagem para a nuvem.");
+          toast.error("Falha ao subir a imagem para a nuvem.", { id: toastId });
+          console.error("Erro ao subir a imagem para a nuvem:", err);
           setIsPending(false);
-          console.error("Erro ao subir a imagem:", err);
           return;
         }
       }
@@ -105,7 +105,9 @@ const RegistrationForm = () => {
       });
 
       if (result?.error) {
-        toast.error("Ocorreu um erro inesperado. Tente novamente.");
+        toast.error("Ocorreu um erro inesperado. Tente novamente.", {
+          id: toastId,
+        });
         setIsPending(false);
         return;
       }
@@ -114,7 +116,9 @@ const RegistrationForm = () => {
         id: toastId,
       });
     } catch (error) {
-      toast.error("Ocorreu um erro inesperado. Tente novamente.");
+      toast.error("Ocorreu um erro inesperado. Tente novamente.", {
+        id: toastId,
+      });
       console.error("Erro ao enviar o cadastro:", error);
     } finally {
       setIsPending(false);

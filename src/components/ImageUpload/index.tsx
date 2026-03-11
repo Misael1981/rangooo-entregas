@@ -27,7 +27,7 @@ const ImageUpload = <TFormValues extends FieldValues>({
       form.setValue(
         name,
         file as unknown as PathValue<TFormValues, Path<TFormValues>>,
-        { shouldDirty: true },
+        { shouldDirty: true, shouldValidate: true },
       );
     }
   };
@@ -38,7 +38,7 @@ const ImageUpload = <TFormValues extends FieldValues>({
     form.setValue(
       name,
       null as unknown as PathValue<TFormValues, Path<TFormValues>>,
-      { shouldDirty: true },
+      { shouldDirty: true, shouldValidate: true },
     );
   };
 

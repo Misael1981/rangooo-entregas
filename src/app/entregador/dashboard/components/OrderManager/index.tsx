@@ -1,9 +1,10 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import OrderCard from "../OrderCard";
 import { ConsumptionMethod, OrderStatus } from "@/generated/prisma/enums";
+import { useRouter } from "next/navigation";
 
 interface DeliveryAddress {
   street: string;
@@ -46,6 +47,15 @@ type OrderManagerProps = {
 
 const OrderManager = ({ orders, deliveryPersonId }: OrderManagerProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const router = useRouter();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      console.log("Dando aquela espiada nos pedidos...");
+      router.refresh();
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [router]);
 
   if (!orders || orders.length === 0 || currentIndex >= orders.length) {
     return (

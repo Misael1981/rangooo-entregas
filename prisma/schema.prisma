@@ -154,6 +154,8 @@ model DeliveryPerson {
 
   user              User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   deliveries        OrderDelivery[]
+  deliverySessions  DeliverySession[]
+
 
   @@map("delivery_persons")
 }
@@ -171,6 +173,20 @@ model OrderDelivery {
   deliveryPerson   DeliveryPerson     @relation(fields: [deliveryPersonId], references: [id])
 
   @@map("order_deliveries")
+}
+
+model DeliverySession {
+  id               String    @id @default(cuid())
+  deliveryPersonId String
+  startTime        DateTime  @default(now())
+  endTime          DateTime?
+  
+  // Métricas específicas desta sessão
+  ordersCompleted  Int       @default(0)
+  sessionRating    Float?    // Média das avaliações recebidas APENAS nesta sessão
+  sessionRatingCount Int     @default(0)
+
+  deliveryPerson   DeliveryPerson @relation(fields: [deliveryPersonId], references: [id])
 }
 
 model Restaurant {

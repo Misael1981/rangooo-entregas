@@ -1,5 +1,6 @@
 "use server";
 
+import { AreaType } from "@/generated/prisma/enums";
 import { db } from "@/lib/prisma";
 import { startOfDay } from "date-fns";
 
@@ -9,6 +10,7 @@ interface DeliveryAddress {
   neighborhood: string;
   city: string;
   complement?: string | null;
+  areaType: AreaType;
 }
 
 export async function getAvailableOrders() {

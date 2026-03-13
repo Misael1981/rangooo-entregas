@@ -27,7 +27,7 @@ const HeaderDeliveryPerson = ({
   };
 
   return (
-    <header className="w-full flex justify-between items-center">
+    <header className="w-full flex justify-between items-center p-4">
       <div className="flex gap-2">
         <div className=" relative">
           <Avatar>

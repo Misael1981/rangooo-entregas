@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import OrderCard from "../OrderCard";
 import { ConsumptionMethod, OrderStatus } from "@/generated/prisma/enums";
 import { useRouter } from "next/navigation";
+import { pusherClient } from "@/lib/pusher";
 
 interface DeliveryAddress {
   street: string;
@@ -50,11 +51,26 @@ const OrderManager = ({ orders, deliveryPersonId }: OrderManagerProps) => {
   const router = useRouter();
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      console.log("Dando aquela espiada nos pedidos...");
+    console.log("📡 Tentando conectar ao Pusher...");
+
+    const channel = pusherClient.subscribe("delivery-orders");
+
+    channel.bind("pusher:subscription_succeeded", () => {
+      console.log("✅ CONECTADO ao canal delivery-orders!");
+    });
+
+    channel.bind("new-order", (data: OrderManagerProps) => {
+      console.log("🔔 EVENTO RECEBIDO!", data);
       router.refresh();
-    }, 10000);
-    return () => clearInterval(interval);
+    });
+
+    pusherClient.connection.bind("error", (err: unknown) => {
+      console.error("❌ Erro de conexão Pusher:", err);
+    });
+
+    return () => {
+      pusherClient.unsubscribe("delivery-orders");
+    };
   }, [router]);
 
   if (!orders || orders.length === 0 || currentIndex >= orders.length) {

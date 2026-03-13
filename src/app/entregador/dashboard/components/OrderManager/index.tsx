@@ -3,46 +3,12 @@
 import { Badge } from "@/components/ui/badge";
 import { useEffect, useState } from "react";
 import OrderCard from "../OrderCard";
-import { ConsumptionMethod, OrderStatus } from "@/generated/prisma/enums";
 import { useRouter } from "next/navigation";
 import { pusherClient } from "@/lib/pusher";
-
-interface DeliveryAddress {
-  street: string;
-  number: string;
-  neighborhood: string;
-  city: string;
-  complement?: string | null;
-}
+import { OrderDTO } from "@/delivery-person.dto";
 
 type OrderManagerProps = {
-  orders: {
-    totalAmount: number;
-    deliveryFee: number;
-    createdAt: string;
-    deliveryAddress: DeliveryAddress;
-    user: {
-      name: string;
-    };
-    restaurant: {
-      number: string | null;
-      name: string;
-      avatarImageUrl: string | null;
-      neighborhood: string | null;
-      street: string | null;
-    };
-    id: string;
-    userId: string;
-    status: OrderStatus;
-    updatedAt: Date;
-    restaurantId: string;
-    customName: string | null;
-    extras: string | null;
-    orderNumber: number | null;
-    printId: string | null;
-    paymentMethod: string | null;
-    consumptionMethod: ConsumptionMethod;
-  }[];
+  orders: OrderDTO[];
   deliveryPersonId: string | undefined;
 };
 
@@ -106,7 +72,7 @@ const OrderManager = ({ orders, deliveryPersonId }: OrderManagerProps) => {
       <OrderCard
         order={orders[currentIndex]}
         deliveryPersonId={deliveryPersonId}
-        onSkip={handleNext} // Nova prop para pular
+        onSkip={handleNext}
       />
     </div>
   );

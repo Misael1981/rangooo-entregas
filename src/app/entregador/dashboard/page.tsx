@@ -19,6 +19,8 @@ export default async function DashboardPage() {
     createdAt: order.createdAt.toISOString(),
   }));
 
+  console.log("Último Pedidos: ", orders[orders.length - 1]);
+
   return (
     <div className="min-h-screen bg-background w-full text-foreground flex justify-center">
       <div className="container p-4 max-w-lg flex flex-col gap-6">

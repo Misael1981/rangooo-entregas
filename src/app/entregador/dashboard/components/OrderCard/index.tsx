@@ -11,54 +11,21 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ConsumptionMethod, OrderStatus } from "@/generated/prisma/enums";
+import { areaTypes_label } from "@/constants/maps-labels";
+import { DeliveryAddressDTO, OrderDTO } from "@/delivery-person.dto";
 import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
 
-interface DeliveryAddress {
-  street: string;
-  number: string;
-  neighborhood: string;
-  city: string;
-  complement?: string | null;
-}
-
 type OrderCardProps = {
-  order: {
-    totalAmount: number;
-    deliveryFee: number;
-    createdAt: string;
-    deliveryAddress: DeliveryAddress;
-    user: {
-      name: string;
-    };
-    restaurant: {
-      number: string | null;
-      name: string;
-      avatarImageUrl: string | null;
-      neighborhood: string | null;
-      street: string | null;
-    };
-    id: string;
-    userId: string;
-    status: OrderStatus;
-    updatedAt: Date;
-    restaurantId: string;
-    customName: string | null;
-    extras: string | null;
-    orderNumber: number | null;
-    printId: string | null;
-    paymentMethod: string | null;
-    consumptionMethod: ConsumptionMethod;
-  };
+  order: OrderDTO;
   deliveryPersonId: string | undefined;
   onSkip: () => void;
 };
 
 const OrderCard = ({ order, deliveryPersonId, onSkip }: OrderCardProps) => {
   const [isAccepting, setIsAccepting] = useState(false);
-  const address = order.deliveryAddress as DeliveryAddress;
+  const address = order.deliveryAddress as DeliveryAddressDTO;
   const formattedDate = new Date(order.createdAt).toLocaleString("pt-BR", {
     day: "2-digit",
     month: "2-digit",
@@ -120,7 +87,9 @@ const OrderCard = ({ order, deliveryPersonId, onSkip }: OrderCardProps) => {
             variant="secondary"
             className="bg-orange-100 text-orange-700 hover:bg-orange-100 border-none"
           >
-            {address?.city || "Zona de Entrega"}
+            {address?.areaType
+              ? areaTypes_label[address.areaType]
+              : "Zona de Entrega"}
           </Badge>
         </div>
 

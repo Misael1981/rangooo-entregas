@@ -29,6 +29,7 @@ export async function acceptOrder(orderId: string, deliveryPersonId: string) {
         where: { id: orderId },
         data: {
           status: "CONFIRMED",
+          deliveryPersonId: deliveryPersonId,
         },
       });
 

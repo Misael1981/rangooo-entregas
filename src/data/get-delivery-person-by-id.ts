@@ -4,7 +4,7 @@ import { db } from "@/lib/prisma";
 export async function getDeliveryPersonByUserId(userId: string) {
   const deliveryPerson = await db.deliveryPerson.findUnique({
     where: {
-      userId: userId, // Busca o entregador vinculado a esse ID de usuário
+      userId: userId,
     },
     include: {
       user: {

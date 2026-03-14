@@ -17,9 +17,8 @@ export default async function DashboardPage() {
     totalAmount: Number(order.totalAmount),
     deliveryFee: Number(order.deliveryFee),
     createdAt: order.createdAt.toISOString(),
+    updatedAt: order.updatedAt.toISOString(),
   }));
-
-  console.log("Último Pedidos: ", orders[orders.length - 1]);
 
   return (
     <div className="min-h-screen bg-background w-full text-foreground flex justify-center">

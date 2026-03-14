@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import OrderCard from "../OrderCard";
 import { useRouter } from "next/navigation";
 import { pusherClient } from "@/lib/pusher";
-import { OrderDTO } from "@/delivery-person.dto";
+import { OrderDTO } from "@/dtos/delivery-person.dto";
 
 type OrderManagerProps = {
   orders: OrderDTO[];

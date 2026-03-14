@@ -2,7 +2,7 @@ import {
   AreaType,
   ConsumptionMethod,
   OrderStatus,
-} from "./generated/prisma/enums";
+} from "@/generated/prisma/enums";
 
 export interface DeliveryAddressDTO {
   street: string;
@@ -10,37 +10,41 @@ export interface DeliveryAddressDTO {
   neighborhood: string;
   city: string;
   complement?: string | null;
+  reference?: string | null;
   areaType: AreaType;
 }
 
+export interface ItemsDTO {
+  customName: string | null;
+  quantity: number;
+  priceAtOrder: number;
+}
+
 export interface RestaurantDTO {
-  number: string | null;
   name: string;
-  avatarImageUrl: string | null;
-  neighborhood: string | null;
   street: string | null;
+  number: string | null;
+  neighborhood: string | null;
+  avatarImageUrl: string | null;
 }
 
 export interface UserDTO {
   name: string;
+  phone?: string | null;
 }
 
 export interface OrderDTO {
-  totalAmount: number;
-  deliveryFee: number;
-  createdAt: string;
   id: string;
-  userId: string;
-  updatedAt: Date;
-  restaurantId: string;
-  customName: string | null;
-  extras: string | null;
   orderNumber: number | null;
-  printId: string | null;
-  paymentMethod: string | null;
   status: OrderStatus;
-  consumptionMethod: ConsumptionMethod;
+  createdAt: string;
+  updatedAt: string;
+  totalAmount: number;
   deliveryAddress: DeliveryAddressDTO;
+  paymentMethod: string | null;
+  consumptionMethod: ConsumptionMethod;
+  deliveryPersonId: string | null;
   restaurant: RestaurantDTO;
   user: UserDTO;
+  items?: ItemsDTO[];
 }

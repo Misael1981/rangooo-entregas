@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { areaTypes_label } from "@/constants/maps-labels";
-import { DeliveryAddressDTO, OrderDTO } from "@/delivery-person.dto";
+import { DeliveryAddressDTO, OrderDTO } from "@/dtos/delivery-person.dto";
 import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";

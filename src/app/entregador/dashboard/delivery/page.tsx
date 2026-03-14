@@ -17,7 +17,11 @@ export default async function DeliveryPage() {
   const activeOrders = await getActiveOrders(deliveryPerson.id);
 
   if (!activeOrders || activeOrders.length === 0) {
-    return <NoActiveDelivery />;
+    return (
+      <section className="h-full">
+        <NoActiveDelivery />
+      </section>
+    );
   }
 
   return (

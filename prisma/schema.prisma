@@ -155,9 +155,22 @@ model DeliveryPerson {
   user              User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   deliveries        OrderDelivery[]
   deliverySessions  DeliverySession[]
-
+  orderRejections   OrderRejection[]
 
   @@map("delivery_persons")
+}
+
+model OrderRejection {
+  id               String   @id @default(cuid())
+  orderId          String
+  deliveryPersonId String
+  reason           String?
+  createdAt        DateTime @default(now())
+
+  deliveryPerson   DeliveryPerson @relation(fields: [deliveryPersonId], references: [id])
+  
+  @@index([deliveryPersonId])
+  @@map("order_rejections")
 }
 
 model DeliverySession {
@@ -166,6 +179,8 @@ model DeliverySession {
   date               DateTime  @default(now()) 
   startTime          DateTime  @default(now())
   endTime            DateTime?
+  lastRejectionAt    DateTime?
+  rejectionsCount    Int       @default(0) 
   
   ordersCompleted    Int       @default(0)
   totalEarnings      Decimal   @default(0) @db.Decimal(10, 2) 

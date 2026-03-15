@@ -1,11 +1,11 @@
 import { db } from "@/lib/prisma";
 
-// No seu arquivo de busca:
 export async function getDeliveryPersonByUserId(userId: string) {
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+
   const deliveryPerson = await db.deliveryPerson.findUnique({
-    where: {
-      userId: userId,
-    },
+    where: { userId: userId },
     include: {
       user: {
         select: {
@@ -17,6 +17,12 @@ export async function getDeliveryPersonByUserId(userId: string) {
             take: 1,
           },
         },
+      },
+      deliverySessions: {
+        where: {
+          date: startOfDay,
+        },
+        take: 1,
       },
     },
   });

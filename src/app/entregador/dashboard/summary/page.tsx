@@ -1,7 +1,23 @@
+import { getServerSession } from "next-auth";
 import SummaryCard from "./components/SummaryCard";
+import { authOptions } from "@/lib/auth";
+import LandingPage from "@/components/LandingPage";
+import { getDeliveryPersonByUserId } from "@/data/get-delivery-person-by-id";
+import { getDeliverySummary } from "@/data/get-delivery-stats";
 
 export default async function SummaryPage() {
-  const stats = {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) return <LandingPage />;
+
+  const deliveryPerson = await getDeliveryPersonByUserId(session.user.id);
+
+  if (!deliveryPerson) return <LandingPage />;
+
+  const stats = await getDeliverySummary(deliveryPerson.id);
+
+  console.log(stats);
+
+  const mockedstats = {
     sessionStart: "14/03/2026 18:42",
     onlineTime: "2h 17min",
 
@@ -32,8 +48,8 @@ export default async function SummaryPage() {
       <SummaryCard
         title="Sessão Atual"
         stats={[
-          { label: "Início da Sessão", value: stats.sessionStart },
-          { label: "Tempo Online", value: stats.onlineTime },
+          { label: "Início da Sessão", value: mockedstats.sessionStart },
+          { label: "Tempo Online", value: mockedstats.onlineTime },
           { label: "Total de Entregas", value: totalDeliveries },
         ]}
       />
@@ -52,16 +68,19 @@ export default async function SummaryPage() {
       <SummaryCard
         title="Estatísticas"
         stats={[
-          { label: "Pedidos Negados", value: stats.refusedOrders },
+          { label: "Pedidos Negados", value: mockedstats.refusedOrders },
           {
             label: "Taxa de Aceitação",
-            value: `${stats.metrics.acceptanceRate}%`,
+            value: `${mockedstats.metrics.acceptanceRate}%`,
           },
           {
             label: "Tempo Médio",
-            value: `${stats.metrics.avgDeliveryTime} min`,
+            value: `${stats.avgDeliveryTime} min`,
           },
-          { label: "Ganhos da Sessão", value: `R$ ${stats.metrics.earnings}` },
+          {
+            label: "Ganhos da Sessão",
+            value: `R$ ${stats.earnings.toFixed(2)}`,
+          },
         ]}
       />
     </div>

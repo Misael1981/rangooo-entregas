@@ -6,14 +6,21 @@ import OrderCard from "../OrderCard";
 import { useRouter } from "next/navigation";
 import { pusherClient } from "@/lib/pusher";
 import { OrderDTO } from "@/dtos/delivery-person.dto";
+import DialogRejectOrder from "../DialogRejectOrder";
 
 type OrderManagerProps = {
   orders: OrderDTO[];
   deliveryPersonId: string | undefined;
+  currentRejections: number | undefined;
 };
 
-const OrderManager = ({ orders, deliveryPersonId }: OrderManagerProps) => {
+const OrderManager = ({
+  orders,
+  deliveryPersonId,
+  currentRejections,
+}: OrderManagerProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isOpenDialogReject, setOpenDialogReject] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -55,7 +62,7 @@ const OrderManager = ({ orders, deliveryPersonId }: OrderManagerProps) => {
   }
 
   const handleNext = () => {
-    setCurrentIndex((prev) => prev + 1);
+    setOpenDialogReject(true);
   };
 
   return (
@@ -73,6 +80,14 @@ const OrderManager = ({ orders, deliveryPersonId }: OrderManagerProps) => {
         order={orders[currentIndex]}
         deliveryPersonId={deliveryPersonId}
         onSkip={handleNext}
+      />
+
+      <DialogRejectOrder
+        open={isOpenDialogReject}
+        onOpenChange={() => setOpenDialogReject(!isOpenDialogReject)}
+        deliveryPersonId={deliveryPersonId!}
+        orderId={orders[currentIndex].id}
+        currentRejections={currentRejections}
       />
     </div>
   );

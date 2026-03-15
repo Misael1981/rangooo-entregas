@@ -1,5 +1,3 @@
-"use server";
-
 import { AreaType } from "@/generated/prisma/enums";
 import { db } from "@/lib/prisma";
 import { startOfDay } from "date-fns";
@@ -13,8 +11,19 @@ interface DeliveryAddress {
   areaType: AreaType;
 }
 
-export async function getAvailableOrders() {
+export async function getAvailableOrders({
+  deliveryPersonId,
+}: {
+  deliveryPersonId: string;
+}) {
   const today = startOfDay(new Date());
+
+  const rejectedOrderIds = await db.orderRejection.findMany({
+    where: { deliveryPersonId },
+    select: { orderId: true },
+  });
+
+  const excludedIds = rejectedOrderIds.map((r) => r.orderId);
 
   const orders = await db.order.findMany({
     where: {
@@ -23,6 +32,9 @@ export async function getAvailableOrders() {
       consumptionMethod: "DELIVERY",
       createdAt: {
         gte: today,
+      },
+      id: {
+        notIn: excludedIds,
       },
     },
     include: {

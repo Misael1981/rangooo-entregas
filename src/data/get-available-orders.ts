@@ -17,6 +17,21 @@ export async function getAvailableOrders({
   deliveryPersonId: string;
 }) {
   const today = startOfDay(new Date());
+  const threeHoursAgo = new Date();
+  threeHoursAgo.setHours(threeHoursAgo.getHours() - 3);
+
+  const person = await db.deliveryPerson.findUnique({
+    where: { id: deliveryPersonId },
+    select: { updatedAt: true, isOnline: true },
+  });
+
+  if (person?.isOnline && person.updatedAt < threeHoursAgo) {
+    await db.deliveryPerson.update({
+      where: { id: deliveryPersonId },
+      data: { isOnline: false },
+    });
+    return [];
+  }
 
   const rejectedOrderIds = await db.orderRejection.findMany({
     where: { deliveryPersonId },

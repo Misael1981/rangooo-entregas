@@ -25,6 +25,21 @@ export default async function DashboardPage() {
     updatedAt: order.updatedAt.toISOString(),
   }));
 
+  const isOnline = deliveryPerson.isOnline;
+
+  if (!isOnline) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="flex flex-col items-center justify-center p-10 text-center rounded-lg border border-dashed">
+          <p className="text-muted-foreground">Você está offline!</p>
+          <p className="text-xs text-gray-400 mt-2">
+            Fique online para receber notificações.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className=" bg-background w-full text-foreground flex justify-center">
       <div className="container p-4 max-w-lg flex flex-col gap-6">

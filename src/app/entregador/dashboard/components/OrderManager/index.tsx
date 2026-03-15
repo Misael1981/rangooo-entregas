@@ -4,9 +4,9 @@ import { Badge } from "@/components/ui/badge";
 import { useEffect, useState } from "react";
 import OrderCard from "../OrderCard";
 import { useRouter } from "next/navigation";
-import { pusherClient } from "@/lib/pusher";
 import { OrderDTO } from "@/dtos/delivery-person.dto";
 import DialogRejectOrder from "../DialogRejectOrder";
+import { getPusherClient } from "@/lib/pusher";
 
 type OrderManagerProps = {
   orders: OrderDTO[];
@@ -24,25 +24,25 @@ const OrderManager = ({
   const router = useRouter();
 
   useEffect(() => {
-    console.log("📡 Tentando conectar ao Pusher...");
-
-    const channel = pusherClient.subscribe("delivery-orders");
+    const pusher = getPusherClient();
+    const channel = pusher.subscribe("delivery-orders");
 
     channel.bind("pusher:subscription_succeeded", () => {
       console.log("✅ CONECTADO ao canal delivery-orders!");
     });
 
-    channel.bind("new-order", (data: OrderManagerProps) => {
+    channel.bind("new-order", (data: unknown) => {
       console.log("🔔 EVENTO RECEBIDO!", data);
       router.refresh();
     });
 
-    pusherClient.connection.bind("error", (err: unknown) => {
+    pusher.connection.bind("error", (err: unknown) => {
       console.error("❌ Erro de conexão Pusher:", err);
     });
 
     return () => {
-      pusherClient.unsubscribe("delivery-orders");
+      channel.unbind_all(); // limpa os binds antes
+      pusher.unsubscribe("delivery-orders");
     };
   }, [router]);
 

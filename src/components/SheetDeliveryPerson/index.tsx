@@ -63,7 +63,7 @@ const SheetDeliveryPerson = ({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="h-full w-[85%] flex flex-col justify-between text-primary">
+      <SheetContent className="h-full w-[95%] flex flex-col justify-between text-primary">
         <SheetHeader>
           <SheetTitle>Configurações de Perfil</SheetTitle>
           <SheetDescription>

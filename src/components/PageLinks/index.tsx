@@ -19,7 +19,7 @@ const linksPage = [
   {
     id: 3,
     url: "/entregador/dashboard/summary",
-    title: "Seu Resumo",
+    title: "Painel de Atividade",
   },
 ];
 

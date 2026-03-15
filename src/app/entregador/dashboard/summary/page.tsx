@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import LandingPage from "@/components/LandingPage";
 import { getDeliveryPersonByUserId } from "@/data/get-delivery-person-by-id";
 import { getDeliverySummary } from "@/data/get-delivery-stats";
+import { OnlineTimer } from "./components/OnlineTimer";
 
 export default async function SummaryPage() {
   const session = await getServerSession(authOptions);
@@ -15,30 +16,16 @@ export default async function SummaryPage() {
 
   const stats = await getDeliverySummary(deliveryPerson.id);
 
-  console.log(stats);
-
-  const mockedstats = {
-    sessionStart: "14/03/2026 18:42",
-    onlineTime: "2h 17min",
-
-    deliveries: {
-      urban: 9,
-      rural: 3,
-      district: 2,
-    },
-
-    refusedOrders: 2,
-
-    metrics: {
-      acceptanceRate: 87,
-      avgDeliveryTime: 21,
-      earnings: 148.5,
-      distance: 37,
-    },
-  };
-
   const totalDeliveries =
     stats.deliveries.urban + stats.deliveries.rural + stats.deliveries.district;
+
+  const sessionStart = stats.sessionStart
+    ? new Intl.DateTimeFormat("pt-BR", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      }).format(new Date(stats.sessionStart))
+    : "--:--";
 
   return (
     <div className="space-y-6 p-6">
@@ -48,8 +35,15 @@ export default async function SummaryPage() {
       <SummaryCard
         title="Sessão Atual"
         stats={[
-          { label: "Início da Sessão", value: mockedstats.sessionStart },
-          { label: "Tempo Online", value: mockedstats.onlineTime },
+          { label: "Início da Sessão", value: sessionStart },
+          {
+            label: "Tempo Online",
+            value: stats.sessionStart ? (
+              <OnlineTimer startTime={stats.sessionStart} />
+            ) : (
+              "--"
+            ),
+          },
           { label: "Total de Entregas", value: totalDeliveries },
         ]}
       />
@@ -68,10 +62,10 @@ export default async function SummaryPage() {
       <SummaryCard
         title="Estatísticas"
         stats={[
-          { label: "Pedidos Negados", value: mockedstats.refusedOrders },
+          { label: "Pedidos Negados", value: stats.rejections },
           {
             label: "Taxa de Aceitação",
-            value: `${mockedstats.metrics.acceptanceRate}%`,
+            value: `${stats.acceptanceRate}%`,
           },
           {
             label: "Tempo Médio",

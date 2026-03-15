@@ -5,7 +5,7 @@ type SummaryCardProps = {
   title: string;
   stats: {
     label: string;
-    value: string | number;
+    value: React.ReactNode;
   }[];
 };
 

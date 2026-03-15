@@ -1,5 +1,6 @@
 import { db } from "@/lib/prisma";
 import { OrderStatus } from "@/generated/prisma/enums";
+import { DeliveryAddressDTO } from "@/dtos/delivery-person.dto";
 
 export async function getDeliverySummary(deliveryPersonId: string) {
   // Pegamos o início do dia atual (00:00:00)
@@ -16,25 +17,22 @@ export async function getDeliverySummary(deliveryPersonId: string) {
       },
     },
     include: {
-      delivery: true, // Para pegarmos os tempos de pickedUp e delivered
+      delivery: true,
     },
   });
 
-  // 1. Cálculos de Ganhos e Quantidades por Área
   const stats = deliveries.reduce(
     (acc, order) => {
       const fee = Number(order.deliveryFee) || 0;
       acc.totalEarnings += fee;
 
-      // Lógica para contar por tipo de área (baseado no seu JSON deliveryAddress)
-      const address = order.deliveryAddress as any;
+      const address = order.deliveryAddress as unknown as DeliveryAddressDTO;
       const area = address?.areaType?.toLowerCase();
 
       if (area === "urban") acc.urban++;
       else if (area === "rural") acc.rural++;
       else if (area === "district") acc.district++;
 
-      // Cálculo para Tempo Médio (em minutos)
       if (order.delivery?.pickedUpAt && order.delivery?.deliveredAt) {
         const duration =
           (order.delivery.deliveredAt.getTime() -
@@ -61,7 +59,29 @@ export async function getDeliverySummary(deliveryPersonId: string) {
       ? Math.round(stats.totalMinutes / stats.timedOrders)
       : 0;
 
+  const currentSession = await db.deliverySession.findUnique({
+    where: {
+      deliveryPersonId_date: {
+        deliveryPersonId,
+        date: startOfDay,
+      },
+    },
+    select: {
+      rejectionsCount: true,
+      startTime: true,
+    },
+  });
+
+  const totalOffers =
+    deliveries.length + (currentSession?.rejectionsCount || 0);
+
+  const acceptanceRate =
+    totalOffers > 0 ? Math.round((deliveries.length / totalOffers) * 100) : 100;
+
   return {
+    acceptanceRate,
+    sessionStart: currentSession?.startTime || null,
+    rejections: currentSession?.rejectionsCount || 0,
     earnings: stats.totalEarnings,
     deliveries: {
       urban: stats.urban,

@@ -3,11 +3,9 @@ import { OrderStatus } from "@/generated/prisma/enums";
 import { DeliveryAddressDTO } from "@/dtos/delivery-person.dto";
 
 export async function getDeliverySummary(deliveryPersonId: string) {
-  // Pegamos o início do dia atual (00:00:00)
   const startOfDay = new Date();
   startOfDay.setHours(0, 0, 0, 0);
 
-  // Buscamos todas as entregas do dia deste entregador
   const deliveries = await db.order.findMany({
     where: {
       deliveryPersonId,
@@ -59,16 +57,27 @@ export async function getDeliverySummary(deliveryPersonId: string) {
       ? Math.round(stats.totalMinutes / stats.timedOrders)
       : 0;
 
-  const currentSession = await db.deliverySession.findUnique({
+  const start = new Date();
+  start.setHours(0, 0, 0, 0);
+
+  const end = new Date();
+  end.setHours(23, 59, 59, 999);
+
+  const currentSession = await db.deliverySession.findFirst({
     where: {
-      deliveryPersonId_date: {
-        deliveryPersonId,
-        date: startOfDay,
+      deliveryPersonId,
+      date: {
+        gte: start,
+        lte: end,
       },
     },
     select: {
       rejectionsCount: true,
       startTime: true,
+      totalFeeToPay: true,
+    },
+    orderBy: {
+      startTime: "desc",
     },
   });
 
@@ -90,5 +99,8 @@ export async function getDeliverySummary(deliveryPersonId: string) {
       total: deliveries.length,
     },
     avgDeliveryTime: avgTime,
+    appFee: Number(currentSession?.totalFeeToPay || 0),
+    netEarnings:
+      stats.totalEarnings - Number(currentSession?.totalFeeToPay || 0),
   };
 }

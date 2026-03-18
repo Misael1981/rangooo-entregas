@@ -9,22 +9,32 @@ export async function toggleOnlineStatus(
 ) {
   try {
     const result = await db.$transaction(async (tx) => {
-      // 1. Atualiza o status principal do entregador
       const updatedPerson = await tx.deliveryPerson.update({
         where: { id: deliveryPersonId },
         data: { isOnline },
       });
 
       if (isOnline) {
-        // 2. Se ligou o switch, CRIAMOS uma nova sessão
-        await tx.deliverySession.create({
-          data: {
+        const startOfDay = new Date();
+        startOfDay.setHours(0, 0, 0, 0);
+
+        await tx.deliverySession.upsert({
+          where: {
+            deliveryPersonId_date: {
+              deliveryPersonId,
+              date: startOfDay,
+            },
+          },
+          update: {
+            // Se ele já logou hoje,  startTime original, só garantir que está online
+          },
+          create: {
             deliveryPersonId,
+            date: startOfDay,
             startTime: new Date(),
           },
         });
       } else {
-        // 3. Se desligou, FECHAMOS a sessão aberta (onde endTime é null)
         const activeSession = await tx.deliverySession.findFirst({
           where: {
             deliveryPersonId,
@@ -44,7 +54,6 @@ export async function toggleOnlineStatus(
       return updatedPerson;
     });
 
-    // Limpa o cache para o Dashboard refletir o novo estado
     revalidatePath("/dashboard/entregador");
 
     return { success: true, data: result };

@@ -5,6 +5,9 @@ import LandingPage from "@/components/LandingPage";
 import { getDeliveryPersonByUserId } from "@/data/get-delivery-person-by-id";
 import { getDeliverySummary } from "@/data/get-delivery-stats";
 import { OnlineTimer } from "./components/OnlineTimer";
+import { formatCurrency } from "@/helpers/format-currency";
+import PixApp from "./components/PixApp";
+import DialogFinishDay from "@/components/DialogFinishDay";
 
 export default async function SummaryPage() {
   const session = await getServerSession(authOptions);
@@ -72,11 +75,25 @@ export default async function SummaryPage() {
             value: `${stats.avgDeliveryTime} min`,
           },
           {
+            label: "Taxa do Aplicativo",
+            value: formatCurrency(stats.appFee),
+          },
+          {
             label: "Ganhos da Sessão",
             value: `R$ ${stats.earnings.toFixed(2)}`,
           },
         ]}
       />
+
+      <PixApp />
+
+      <DialogFinishDay
+        totalDeliveries={totalDeliveries}
+        sessionEarnings={stats.earnings}
+        appFee={stats.appFee}
+        deliveryPersonId={deliveryPerson.id}
+      />
     </div>
   );
 }
+//sessionEarnings

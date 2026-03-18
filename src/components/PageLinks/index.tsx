@@ -21,6 +21,11 @@ const linksPage = [
     url: "/entregador/dashboard/summary",
     title: "Painel de Atividade",
   },
+  {
+    id: 4,
+    url: "/entregador/dashboard/metrics",
+    title: "Desempenho Mensal",
+  },
 ];
 
 const PageLinks = () => {

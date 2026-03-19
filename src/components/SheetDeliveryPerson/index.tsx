@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
@@ -30,17 +30,11 @@ const SheetDeliveryPerson = ({
   deliveryPersonId,
 }: SheetDeliveryPersonProps) => {
   const [loading, setLoading] = useState(false);
-  const [currentStatus, setCurrentStatus] = useState(isOnline);
-
-  // Sincroniza o status se ele mudar externamente
-  useEffect(() => {
-    setCurrentStatus(isOnline);
-  }, [isOnline]);
+  const [currentStatus, setCurrentStatus] = useState(isOnline ?? false);
 
   const handleToggleStatus = async (checked: boolean) => {
     setLoading(true);
     try {
-      // Aqui a gente chama a Action que abre/fecha a DeliverySession
       const result = await toggleOnlineStatus(deliveryPersonId, checked);
 
       if (result.success) {
@@ -94,7 +88,7 @@ const SheetDeliveryPerson = ({
                 id="online-mode"
                 checked={currentStatus}
                 onCheckedChange={handleToggleStatus}
-                disabled={loading} // Evita cliques duplos enquanto o banco processa
+                disabled={loading}
               />
             </div>
           </div>

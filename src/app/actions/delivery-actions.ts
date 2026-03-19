@@ -25,9 +25,7 @@ export async function toggleOnlineStatus(
               date: startOfDay,
             },
           },
-          update: {
-            // Se ele já logou hoje,  startTime original, só garantir que está online
-          },
+          update: {},
           create: {
             deliveryPersonId,
             date: startOfDay,
@@ -54,7 +52,7 @@ export async function toggleOnlineStatus(
       return updatedPerson;
     });
 
-    revalidatePath("/dashboard/entregador");
+    revalidatePath("/entregador/dashboard");
 
     return { success: true, data: result };
   } catch (error) {

@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import OrderManager from "./components/OrderManager";
 import { getAvailableOrders } from "@/data/get-available-orders";
+import { PushRegister } from "@/components/PushRegister";
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
@@ -43,6 +44,7 @@ export default async function DashboardPage() {
   return (
     <div className=" bg-background w-full text-foreground flex justify-center">
       <div className="container p-4 max-w-lg flex flex-col gap-6">
+        <PushRegister deliveryPersonId={deliveryPersonId} />
         <OrderManager
           orders={orders}
           deliveryPersonId={deliveryPerson?.id}

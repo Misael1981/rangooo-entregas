@@ -8,7 +8,6 @@ const PixApp = () => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
-    // Puxamos a chave do seu .env
     const pixKey = process.env.NEXT_PUBLIC_CHAVE_PIX;
 
     if (!pixKey) {
@@ -17,11 +16,21 @@ const PixApp = () => {
     }
 
     try {
-      await navigator.clipboard.writeText(pixKey);
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(pixKey);
+      } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = pixKey;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+      }
 
-      // Feedback visual
       setCopied(true);
-
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error("Falha ao copiar:", err);

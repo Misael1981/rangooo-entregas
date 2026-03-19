@@ -41,12 +41,18 @@ const OrderCard = ({ order, deliveryPersonId, onSkip }: OrderCardProps) => {
   const handleAccept = async () => {
     setIsAccepting(true);
 
-    const result = await acceptOrder(order.id, deliveryPersonId);
+    try {
+      const result = await acceptOrder(order.id, deliveryPersonId);
 
-    if (result.success) {
-      toast.success("Pedido aceito! Vá até o restaurante. 🏁");
-    } else {
-      toast.error(result.error);
+      if (result.success) {
+        toast.success("Pedido aceito! Vá até o restaurante. 🏁");
+      } else {
+        toast.error(result.error);
+      }
+    } catch (err) {
+      toast.error("Erro inesperado.");
+      console.error(err);
+    } finally {
       setIsAccepting(false);
     }
   };

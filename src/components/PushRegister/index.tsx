@@ -33,8 +33,8 @@ export function PushRegister({
       );
 
       console.log("✅ Motoca pronto para receber notificações!");
-    } catch (error) {
-      console.error("❌ Erro ao configurar Push:", error);
+    } catch (err) {
+      console.warn("⚠️ Push não configurado:", err);
     }
   }, [deliveryPersonId]);
 

@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/prisma";
-import { OrderStatus } from "@/generated/prisma/enums";
+import { OrderStatus } from "@misael1981/rangooo-database";
 import { revalidatePath } from "next/cache";
 
 export async function updateOrderStatus(orderId: string, status: OrderStatus) {

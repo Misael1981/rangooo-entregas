@@ -1,5 +1,5 @@
 import { db } from "@/lib/prisma";
-import { AreaType } from "@/generated/prisma/enums";
+import { AreaType } from "@misael1981/rangooo-database";
 
 interface DeliveryAddress {
   city: string;

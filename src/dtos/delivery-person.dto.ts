@@ -2,7 +2,7 @@ import {
   AreaType,
   ConsumptionMethod,
   OrderStatus,
-} from "@/generated/prisma/enums";
+} from "@misael1981/rangooo-database";
 
 export interface DeliveryAddressDTO {
   street: string;

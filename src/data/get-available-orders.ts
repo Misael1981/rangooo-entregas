@@ -1,5 +1,5 @@
-import { AreaType } from "@/generated/prisma/enums";
 import { db } from "@/lib/prisma";
+import { AreaType } from "@misael1981/rangooo-database";
 import { startOfDay } from "date-fns";
 
 interface DeliveryAddress {

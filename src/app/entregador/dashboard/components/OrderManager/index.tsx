@@ -1,12 +1,12 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { useEffect, useState } from "react";
-import OrderCard from "../OrderCard";
-import { useRouter } from "next/navigation";
 import { OrderDTO } from "@/dtos/delivery-person.dto";
-import DialogRejectOrder from "../DialogRejectOrder";
 import { getPusherClient } from "@/lib/pusher";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import OrderCard from "../OrderCard";
+import DialogRejectOrder from "../DialogRejectOrder";
 
 type OrderManagerProps = {
   orders: OrderDTO[];
@@ -31,7 +31,7 @@ const OrderManager = ({
       console.log("✅ CONECTADO ao canal delivery-orders!");
     });
 
-    channel.bind("new-order", (data: unknown) => {
+    channel.bind("order:created", (data: unknown) => {
       console.log("🔔 EVENTO RECEBIDO!", data);
       router.refresh();
     });
@@ -41,7 +41,7 @@ const OrderManager = ({
     });
 
     return () => {
-      channel.unbind_all(); // limpa os binds antes
+      channel.unbind_all();
       pusher.unsubscribe("delivery-orders");
     };
   }, [router]);

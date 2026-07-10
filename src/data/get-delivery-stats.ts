@@ -1,6 +1,6 @@
-import { db } from "@/lib/prisma";
-import { OrderStatus } from "@/generated/prisma/enums";
 import { DeliveryAddressDTO } from "@/dtos/delivery-person.dto";
+import { db } from "@/lib/prisma";
+import { OrderStatus } from "@misael1981/rangooo-database";
 
 export async function getDeliverySummary(deliveryPersonId: string) {
   const startOfDay = new Date();

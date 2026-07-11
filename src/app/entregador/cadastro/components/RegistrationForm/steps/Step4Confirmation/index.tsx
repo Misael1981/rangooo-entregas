@@ -9,8 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { VehicleType } from "@/constants/enums";
 import { VEHICLES_LABEL } from "@/constants/maps-labels";
-import { VehicleType } from "@/generated/prisma/enums";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 

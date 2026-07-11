@@ -1,6 +1,5 @@
 "use client";
 
-import { OrderStatus } from "@/generated/prisma/enums";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +22,7 @@ import {
   ItemsDTO,
   OrderDTO,
 } from "@/dtos/delivery-person.dto";
+import { OrderStatus } from "@/constants/enums";
 
 type ActiveDeliveryCardProps = {
   order: OrderDTO;

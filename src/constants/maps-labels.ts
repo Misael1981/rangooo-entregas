@@ -1,4 +1,4 @@
-import { AreaType, VehicleType } from "@/generated/prisma/enums";
+import { AreaType, VehicleType } from "./enums";
 
 export const VEHICLES_LABEL: Record<
   (typeof VehicleType)[keyof typeof VehicleType],

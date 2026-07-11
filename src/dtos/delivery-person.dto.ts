@@ -1,8 +1,4 @@
-import {
-  AreaType,
-  ConsumptionMethod,
-  OrderStatus,
-} from "@misael1981/rangooo-database";
+import { AreaType, ConsumptionMethod, OrderStatus } from "@/constants/enums";
 
 export interface DeliveryAddressDTO {
   street: string;
